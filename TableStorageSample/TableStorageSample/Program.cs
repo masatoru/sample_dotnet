@@ -67,6 +67,8 @@ namespace TableStorageSample
             {
                 Console.WriteLine($"error. msg={ex.Message}");
             }
+            Console.WriteLine($"終了しました(Push any key)");
+            Console.ReadKey();
         }
     }
 }
