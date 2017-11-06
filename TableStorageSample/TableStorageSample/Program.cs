@@ -14,12 +14,14 @@ namespace TableStorageSample
             {
                 var storageAccount = CloudStorageAccount.Parse(
                     CloudConfigurationManager.GetSetting("StorageConnectionString"));
+                Console.WriteLine($"storageAccount={storageAccount}");
 
                 // Create the table client.
                 var tableClient = storageAccount.CreateCloudTableClient();
 
+                Console.WriteLine($"create table");
                 // テーブルを作成する
-                var table = tableClient.GetTableReference("people");
+                var table = tableClient.GetTableReference("samplepeople");
 
                 // Create the table if it doesn't exist.
                 table.CreateIfNotExists();
@@ -35,21 +37,7 @@ namespace TableStorageSample
 //                // Execute the insert operation.
 //                table.Execute(insertOperation);
 
-                // バッチで挿入する
-                TableBatchOperation batchOperation = new TableBatchOperation();
-
-                CustomerEntity customer1 = new CustomerEntity("Smith", "Jeff");
-                customer1.Email = "Jeff@contoso.com";
-                customer1.PhoneNumber = "425-555-0104";
-
-                CustomerEntity customer2 = new CustomerEntity("Smith", "Ben");
-                customer2.Email = "Ben@contoso.com";
-                customer2.PhoneNumber = "425-555-0102";
-
-                batchOperation.Insert(customer1);
-                batchOperation.Insert(customer2);
-
-                table.ExecuteBatch(batchOperation);
+                InsertRows(table);
 
                 // データを取得する
                 // Construct the query operation for all customer entities where PartitionKey="Smith".
@@ -69,6 +57,33 @@ namespace TableStorageSample
             }
             Console.WriteLine($"終了しました(Push any key)");
             Console.ReadKey();
+        }
+
+        private static void InsertRows(CloudTable table)
+        {
+            try
+            {
+                Console.WriteLine($"insert data");
+                // バッチで挿入する
+                TableBatchOperation batchOperation = new TableBatchOperation();
+
+                CustomerEntity customer1 = new CustomerEntity("Smith", "Jeff");
+                customer1.Email = "Jeff@contoso.com";
+                customer1.PhoneNumber = "425-555-0104";
+
+                CustomerEntity customer2 = new CustomerEntity("Smith", "Ben");
+                customer2.Email = "Ben@contoso.com";
+                customer2.PhoneNumber = "425-555-0102";
+
+                batchOperation.Insert(customer1);
+                batchOperation.Insert(customer2);
+
+                table.ExecuteBatch(batchOperation);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"挿入時エラー msg={ex.Message}");
+            }
         }
     }
 }
