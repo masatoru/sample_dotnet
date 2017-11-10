@@ -17,7 +17,7 @@ namespace XmlCustomSerializationSample
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <GroupFile>
     <Group id=""10"" desc=""Description"">
-        <Member id=""117"">あああ&#x296f0;</Member>
+        <Member id=""117"">&#x296f0;</Member>
     </Group>    
 </GroupFile>";
 

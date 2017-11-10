@@ -43,7 +43,7 @@ namespace XmlCustomSerializationSample
         {
             get
             {
-                return HttpUtility.HtmlEncode(Value);
+//                return HttpUtility.HtmlEncode(Value);
                 
                 // convert to hex representation
                 var res = HttpUtility.HtmlEncode(Value);  // UTF(&#x296f0;) → &#169712;
