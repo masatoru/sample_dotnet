@@ -36,16 +36,18 @@ namespace XmlCustomSerializationSample
         public int Id { get; set; }       
 
         [XmlIgnore]
-        public string Value { get; set; }
+        public string Value { get; set; }  //&#x00B0;が変換された結果が入る
 
         [XmlText]
         public string HexValue
         {
             get
             {
+                return HttpUtility.HtmlEncode(Value);
+                
                 // convert to hex representation
-                var res = HttpUtility.HtmlEncode(Value);
-                res = DecimalToHexadecimalEncoding(res);
+                var res = HttpUtility.HtmlEncode(Value);  // UTF(&#x296f0;) → &#169712;
+                res = DecimalToHexadecimalEncoding(res);   // &#x296f0;  (文字列として)
                 return res;
             }
         }

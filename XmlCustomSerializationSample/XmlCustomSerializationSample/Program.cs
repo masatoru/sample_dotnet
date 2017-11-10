@@ -17,11 +17,26 @@ namespace XmlCustomSerializationSample
                 @"<?xml version=""1.0"" encoding=""UTF-8""?>
 <GroupFile>
     <Group id=""10"" desc=""Description"">
-        <Member id=""117"">&#x00B0;</Member>
+        <Member id=""117"">あああ&#x296f0;</Member>
     </Group>    
 </GroupFile>";
 
             Console.WriteLine("Read XML ...");
+            var grp = ReadXml(text);
+            
+            var mem = grp.Groups[0].Members[0];
+            Console.WriteLine($"GroupFile HexValue={mem.HexValue} Value={mem.Value}");
+
+            Console.WriteLine("");
+            Console.WriteLine("Write XML ...");
+            Console.WriteLine($"{WriteXml(grp)}");
+            
+            Console.WriteLine($"Push any key...");
+            Console.ReadKey();
+        }
+
+        private static GroupFile ReadXml(string text)
+        {
             using (var stream = new StringReader(text))
             {
                 // xml reader setting.
@@ -35,31 +50,17 @@ namespace XmlCustomSerializationSample
                 using (XmlReader xmlReader = XmlReader.Create(stream, xmlReaderSettings))
                 {
                     XmlSerializer xmlSerializer = new XmlSerializer(typeof(GroupFile));
-                    var grp = (GroupFile) xmlSerializer.Deserialize(xmlReader);
-
-                    var mem = grp.Groups[0].Members[0];
-                    // HexValue...
-                    Console.WriteLine($"GroupFile HexValue={mem.HexValue} Value={mem.Value}");
-                    
-                    Console.WriteLine("");
-                    Console.WriteLine("Write XML ...");
-                    Console.WriteLine($"{WriteXml(grp)}");
+                    return (GroupFile) xmlSerializer.Deserialize(xmlReader);
                 }
             }
-            Console.WriteLine($"Push any key...");
-            Console.ReadKey();
         }
 
         private static string WriteXml(GroupFile value)
         {
             var settings = new XmlWriterSettings
             {
-//                NewLineChars = "\n",
-//                OmitXmlDeclaration = true, //なぜかUTF-8が16になってしまうので自分で
                 Indent = true,
                 IndentChars = "\t",
-//                NamespaceHandling = NamespaceHandling.OmitDuplicates,
-//                DoNotEscapeUriAttributes = true,
             };
 
             using (var stream = new StringWriter())
